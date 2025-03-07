@@ -13,8 +13,8 @@ public class UsersDTO {
     @AllArgsConstructor
     public static class request {
         private String name;
-        private String password;
         private String email;
+        private String password;
         private int age;
     }
 

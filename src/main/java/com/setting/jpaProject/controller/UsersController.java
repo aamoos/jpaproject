@@ -1,11 +1,15 @@
 package com.setting.jpaProject.controller;
 
+import com.setting.jpaProject.dto.LoginDTO;
 import com.setting.jpaProject.dto.UsersDTO;
-import com.setting.jpaProject.entity.Users;
+import com.setting.jpaProject.jwt.JwtUtil;
 import com.setting.jpaProject.service.UsersService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -16,6 +20,9 @@ import java.util.List;
 public class UsersController {
 
     private final UsersService usersService;
+    private final JwtUtil jwtUtil;
+    private final AuthenticationManager authenticationManager;
+    private final PasswordEncoder passwordEncoder;
 
     // 사용자 생성
     @PostMapping
@@ -46,5 +53,15 @@ public class UsersController {
     public ResponseEntity<Void> deleteUser(@PathVariable("id") Long id) {
         usersService.deleteUser(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<LoginDTO.response> login(@RequestBody LoginDTO.request request) {
+        authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
+        );
+        String token = jwtUtil.generateToken(request.getEmail());
+
+        return ResponseEntity.ok(new LoginDTO.response("로그인 성공", token));
     }
 }

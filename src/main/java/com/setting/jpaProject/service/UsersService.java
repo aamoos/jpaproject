@@ -6,6 +6,7 @@ import com.setting.jpaProject.error.CustomException;
 import com.setting.jpaProject.error.ErrorCode;
 import com.setting.jpaProject.repository.UsersRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
@@ -16,6 +17,7 @@ import java.util.stream.Collectors;
 public class UsersService {
 
     private final UsersRepository usersRepository;
+    private final PasswordEncoder passwordEncoder;
 
     // 사용자 생성
     @Transactional
@@ -26,7 +28,7 @@ public class UsersService {
             throw new CustomException(ErrorCode.USERS_DUPLICATE);
         }
 
-        Users users = Users.fromDTO(request);
+        Users users = Users.fromDTO(request, passwordEncoder);
         return UsersDTO.response.fromEntity(usersRepository.save(users));
     }
 
@@ -60,7 +62,7 @@ public class UsersService {
                 .orElseThrow(() -> new CustomException(ErrorCode.USERS_NOT_FOUND));
 
         // Update the user details
-        user.updateUser(request.getName(), request.getEmail(), request.getAge());
+        user.updateUser(request, passwordEncoder);
 
         // Convert the updated user entity to UsersDTO.response and return it
         return UsersDTO.response.fromEntity(usersRepository.save(user));
