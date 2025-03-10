@@ -1,38 +1,30 @@
 package com.setting.jpaProject.error;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 
+import static org.springframework.http.HttpStatus.*;
+
 @Getter
-@AllArgsConstructor
+@RequiredArgsConstructor
 public enum ErrorCode {
+    // auth
+    ILLEGAL_REGISTRATION_ID(NOT_ACCEPTABLE, "illegal registration id"),
+    TOKEN_EXPIRED(UNAUTHORIZED, "토큰이 만료되었습니다."),
+    INVALID_TOKEN(UNAUTHORIZED, "올바르지 않은 토큰입니다."),
+    INVALID_JWT_SIGNATURE(UNAUTHORIZED, "잘못된 JWT 시그니처입니다."),
 
-    /*
-     * 400 BAD_REQUEST: 잘못된 요청
-     */
-    BAD_REQUEST(HttpStatus.BAD_REQUEST, "잘못된 요청입니다."),
+    // member
+    MEMBER_NOT_FOUND(NOT_FOUND, "회원을 찾을 수 없습니다."),
 
-    /*
-     * 404 NOT_FOUND: 리소스를 찾을 수 없음
-     */
-    POSTS_NOT_FOUND(HttpStatus.NOT_FOUND, "게시글 정보를 찾을 수 없습니다."),
-    USERS_NOT_FOUND(HttpStatus.NOT_FOUND, "사용자 정보를 찾을 수 없습니다."),
-    USERS_DUPLICATE(HttpStatus.CONFLICT, "이미 존재하는 사용자입니다."),
+    // global
+    RESOURCE_LOCKED(LOCKED, "자원이 잠겨있어 접근할 수 없습니다."),
+    NO_ACCESS(FORBIDDEN, "접근 권한이 없습니다."),
+    RESOURCE_NOT_FOUND(NOT_FOUND, "요청한 자원을 찾을 수 없습니다."),
+    INVALID_REQUEST(BAD_REQUEST, "올바르지 않은 요청입니다."),
+    INTERNAL_ERROR(INTERNAL_SERVER_ERROR, "예상치못한 에러가 발생했습니다.");
 
-    /*
-     * 405 METHOD_NOT_ALLOWED: 허용되지 않은 Request Method 호출
-     */
-    METHOD_NOT_ALLOWED(HttpStatus.METHOD_NOT_ALLOWED, "허용되지 않은 메서드입니다."),
-
-    /*
-     * 500 INTERNAL_SERVER_ERROR: 내부 서버 오류
-     */
-    INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "내부 서버 오류입니다."),
-
-    ;
-
-    private final HttpStatus status;
+    private final HttpStatus httpStatus;
     private final String message;
-
 }
