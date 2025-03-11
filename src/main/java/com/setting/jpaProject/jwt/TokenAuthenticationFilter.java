@@ -26,7 +26,7 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
         String accessToken = resolveToken(request);
-        System.out.println(request.getRequestURI());
+
         if (tokenProvider.validateToken(accessToken)) {
             setAuthentication(accessToken);
         } else {

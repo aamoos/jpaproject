@@ -1,4 +1,4 @@
-package com.setting.jpaProject.security;
+package com.setting.jpaProject.config;
 
 import com.setting.jpaProject.jwt.TokenAuthenticationFilter;
 import com.setting.jpaProject.jwt.TokenExceptionFilter;
@@ -49,7 +49,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests(request ->
                         request.requestMatchers(
                                         new AntPathRequestMatcher("/"),
-                                        new AntPathRequestMatcher("/auth/success"),
+                                        new AntPathRequestMatcher("/api/**"),
+                                        new AntPathRequestMatcher("/auth/**"),
                                         new AntPathRequestMatcher("/h2-console/**")
                                 ).permitAll()
                                 .anyRequest().authenticated()

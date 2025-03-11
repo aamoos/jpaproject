@@ -27,9 +27,4 @@ public class AuthController {
         tokenService.deleteRefreshToken(userDetails.getUsername());
         return ResponseEntity.noContent().build();
     }
-
-    @GetMapping("/test")
-    public String loginSuccess() {
-        return "OK";
-    }
 }
