@@ -13,14 +13,19 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Override
     public void addCorsMappings(CorsRegistry registry) {
-        registry.addMapping("/api/**") // Allows CORS for all /api/ endpoints
+        registry
+                .addMapping("/api/**") // Allows CORS for all /api/ endpoints
                 .allowedOrigins(allowedOrigins) // Frontend origin
                 .allowedMethods("GET", "POST", "PUT", "DELETE") // Allowed HTTP methods
-                .allowedHeaders("*"); // Allow all headers
+                .allowedHeaders("*")
+                .allowCredentials(true); // Allow all headers
 
-        registry.addMapping("/auth/**") // Allows CORS for all /api/ endpoints
+        registry
+                .addMapping("/auth/**") // Allows CORS for all /api/ endpoints
                 .allowedOrigins(allowedOrigins) // Frontend origin
                 .allowedMethods("GET", "POST", "PUT", "DELETE") // Allowed HTTP methods
-                .allowedHeaders("*"); // Allow all headers
+                .allowedHeaders("*")
+                .allowCredentials(true); // Allow all headers
+
     }
 }
