@@ -21,3 +21,6 @@ spring:
 
 jwt:
   key: c3ByaW5nLWJvb3QtYXBpLWp3dC1zZWNyZXQta2V5LXN1cGVyLXNlY3JldC15ZXMteWVzLXllcy0yNAo=
+
+oauth2:
+  redirect-uri: "http://localhost:3000/oauth2/redirect"
