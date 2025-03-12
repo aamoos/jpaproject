@@ -1,11 +1,15 @@
 package com.setting.jpaProject.jwt;
 
+import com.setting.jpaProject.error.CustomException;
 import com.setting.jpaProject.error.TokenException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
+import static com.setting.jpaProject.error.ErrorCode.INVALID_TOKEN;
 import static com.setting.jpaProject.error.ErrorCode.TOKEN_EXPIRED;
 
 @Slf4j
@@ -14,6 +18,12 @@ import static com.setting.jpaProject.error.ErrorCode.TOKEN_EXPIRED;
 public class TokenService {
 
     private final TokenRepository tokenRepository;
+
+    public String getMemberKey(String refreshToken){
+        Optional<Token> byRefreshToken = tokenRepository.findByRefreshToken(refreshToken);
+        Token token = byRefreshToken.orElseThrow(() -> new CustomException(INVALID_TOKEN) {});
+        return token.getId();
+    }
 
     public void deleteRefreshToken(String memberKey) {
         tokenRepository.deleteById(memberKey);
