@@ -17,4 +17,11 @@ public class CookieUtil {
 
         response.addCookie(refreshTokenCookie);
     }
+
+    public static void removeRefreshTokenCookie(HttpServletResponse response) {
+        Cookie refreshTokenCookie = new Cookie("refreshToken", null);
+        refreshTokenCookie.setMaxAge(0);  // Expire the cookie immediately
+        refreshTokenCookie.setPath("/");  // Ensure it's the same path
+        response.addCookie(refreshTokenCookie);
+    }
 }

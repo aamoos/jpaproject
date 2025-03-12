@@ -1,5 +1,6 @@
 package com.setting.jpaProject.controller;
 
+import com.setting.jpaProject.cookie.CookieUtil;
 import com.setting.jpaProject.dto.LoginResponse;
 import com.setting.jpaProject.jwt.TokenProvider;
 import com.setting.jpaProject.jwt.TokenService;
@@ -29,8 +30,9 @@ public class AuthController {
 //    }
 
     @DeleteMapping("/logout")
-    public ResponseEntity<Void> logout(@AuthenticationPrincipal UserDetails userDetails) {
+    public ResponseEntity<Void> logout(@AuthenticationPrincipal UserDetails userDetails, HttpServletResponse response) {
         tokenService.deleteRefreshToken(userDetails.getUsername());
+        CookieUtil.removeRefreshTokenCookie(response);
         return ResponseEntity.noContent().build();
     }
 
