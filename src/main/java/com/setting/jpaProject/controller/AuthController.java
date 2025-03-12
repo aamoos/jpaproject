@@ -3,6 +3,7 @@ package com.setting.jpaProject.controller;
 import com.setting.jpaProject.dto.LoginResponse;
 import com.setting.jpaProject.jwt.TokenProvider;
 import com.setting.jpaProject.jwt.TokenService;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -16,6 +17,7 @@ import java.util.Map;
 
 @RequiredArgsConstructor
 @RestController
+@RequestMapping("/auth")
 public class AuthController {
 
     private final TokenService tokenService;
@@ -26,22 +28,20 @@ public class AuthController {
 //        return ResponseEntity.ok(loginResponse);
 //    }
 
-    @DeleteMapping("/auth/logout")
+    @DeleteMapping("/logout")
     public ResponseEntity<Void> logout(@AuthenticationPrincipal UserDetails userDetails) {
         tokenService.deleteRefreshToken(userDetails.getUsername());
         return ResponseEntity.noContent().build();
     }
 
     @PostMapping("/refresh-token")
-    public ResponseEntity<?> refreshAccessToken(@RequestBody Map<String, String> requestBody) {
-        String refreshToken = requestBody.get("refreshToken");
-
-        if (StringUtils.isEmpty(refreshToken)) {
+    public ResponseEntity<?> refreshAccessToken(@CookieValue(value = "refreshToken", required = false) String refreshToken, HttpServletResponse response) {
+        if (refreshToken == null || refreshToken.isEmpty()) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Refresh token is required");
         }
 
-        // refreshToken을 검증하고 새로운 accessToken을 발급
-        String newAccessToken = tokenProvider.reissueAccessToken(refreshToken);
+        // Refresh Token 검증 후 새로운 Access Token 발급
+        String newAccessToken = tokenProvider.reissueRefreshToken(refreshToken, response);
 
         if (newAccessToken != null) {
             return ResponseEntity.ok(new LoginResponse(newAccessToken));
